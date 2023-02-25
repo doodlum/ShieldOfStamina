@@ -1,7 +1,7 @@
 #include "dataHandler.h"
 #include "SimpleIni.h"
 void dataHandler::readSettings() {
-	INFO("reading settings");
+	logger::info("reading settings");
 	using namespace settings;
 	CSimpleIniA ini;
 #define SETTINGFILE_PATH "Data\\SKSE\\Plugins\\ShieldOfStamina.ini"

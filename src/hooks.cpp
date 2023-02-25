@@ -10,9 +10,8 @@ namespace Utils {
 /*stamina blocking*/
 void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 	//check iff hit is blocked
-	int hitFlag = (int)hitData.flags;
 	using HITFLAG = RE::HitData::Flag;
-	if (!(hitFlag & (int)HITFLAG::kBlocked)) {
+	if (!(hitData.flags.any(HITFLAG::kBlocked))) {
 		_ProcessHit(target, hitData);
 		return;
 	}
@@ -28,10 +27,10 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 	bool isPlayerAggressor = aggressor->IsPlayerRef();
 	float staminaDamageBase = hitData.totalDamage;
 	float staminaDamageMult;
-	DEBUG("base stamina damage is {}", staminaDamageBase);
+	logger::debug("base stamina damage is {}", staminaDamageBase);
 	using namespace settings;
-	if (hitFlag & (int)HITFLAG::kBlockWithWeapon) {
-		DEBUG("hit blocked with weapon");
+	if (hitData.flags.any(HITFLAG::kBlockWithWeapon)) {
+		logger::debug("hit blocked with weapon");
 		if (isPlayerTarget) {
 			staminaDamageMult = bckWpnStaminaMult_PC_Block_NPC;
 		}
@@ -46,7 +45,7 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 		}
 	}
 	else {
-		DEBUG("hit blocked with shield");
+		logger::debug("hit blocked with shield");
 		if (isPlayerTarget) {
 			staminaDamageMult = bckShdStaminaMult_PC_Block_NPC;
 		}
@@ -60,19 +59,19 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 		}
 	}
 	float staminaDamage = staminaDamageBase * staminaDamageMult;
-	float targetStamina = target->GetActorValue(RE::ActorValue::kStamina);
+	float targetStamina = target->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina);
 	
 	//check whether there's enough stamina to block incoming attack
 	if (targetStamina < staminaDamage) {
-		DEBUG("not enough stamina to block, blocking part of damage!");
+		logger::debug("not enough stamina to block, blocking part of damage!");
 		if (settings::guardBreak) {
-			DEBUG("guard break!");
+			logger::debug("guard break!");
 			target->NotifyAnimationGraph("staggerStart");
 		}
 		hitData.totalDamage = hitData.totalDamage - (targetStamina / staminaDamageMult);
 		Utils::damageav(target, RE::ActorValue::kStamina,
 			targetStamina);
-		DEBUG("failed to block {} damage", hitData.totalDamage);
+		logger::debug("failed to block {} damage", hitData.totalDamage);
 	}
 	else {
 		hitData.totalDamage = 0;

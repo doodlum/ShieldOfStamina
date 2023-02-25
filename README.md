@@ -1,9 +1,5 @@
-# ShieldOfStamina
-simple SKSE plugin making blocking only costs stamina
-Does three things:
-1. blocking only costs stamina. Health damage is negated at the moment of damage calculation and turned into stamina damaege.
-2. when the blocked attack has more damage than the blocker's current stamina is able to handle, the blocker staggers.
-3. stifles stamina regen when actor is blocking.
+# EldenCounter
+SKSE plugin bringing Elden Ring's guard counter mechanic into Skyrim</br>
+https://www.nexusmods.com/skyrimspecialedition/mods/65579?tab=description
 
-
-https://www.nexusmods.com/skyrimspecialedition/mods/62137?tab=posts
+https://www.thegamer.com/skyrim-mod-adds-elden-rings-guard-counter/

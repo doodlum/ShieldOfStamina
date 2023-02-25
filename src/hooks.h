@@ -7,7 +7,7 @@ public:
         SKSE::AllocTrampoline(1 << 4);
         auto& trampoline = SKSE::GetTrampoline();
         _ProcessHit = trampoline.write_call<5>(hook.address() + 0x3C0, processHit);
-        INFO("hit event hook installed!");
+        logger::info("hit event hook installed!");
     };
 private:
     static void processHit(RE::Actor* target, RE::HitData& hitData);
@@ -22,7 +22,7 @@ public:
         SKSE::AllocTrampoline(1 << 4);
         auto& trampoline = SKSE::GetTrampoline();
         _shouldRegenStamina = trampoline.write_call<5>(hook.address() + 0x62, shouldRegenStamina);
-        INFO("stamina regen hook installed");
+        logger::info("stamina regen hook installed");
     };
 private:
     static bool shouldRegenStamina(RE::ActorState* a_this, uint16_t a_flags);
