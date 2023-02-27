@@ -3,7 +3,7 @@
 namespace Utils {
 	inline void damageav(RE::Actor* a, RE::ActorValue av, float val)
 	{
-		a->As<RE::ActorValueOwner>()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, av, -val);
+		a->AsActorValueOwner()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, av, -val);
 	}
 }
 
@@ -83,11 +83,11 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 }
 
 bool staminaRegenHook::shouldRegenStamina(RE::ActorState* a_this, uint16_t a_flags) {
-	//iff bResult is true, prevents regen.
+	//if bResult is true, prevents regen.
 	bool bResult = _shouldRegenStamina(a_this, a_flags); // is sprinting?
 
 	if (!bResult) {
-		RE::Actor* actor = SKSE::stl::adjust_pointer<RE::Actor>(a_this, -0xB8);
+		RE::Actor* actor = SKSE::stl::adjust_pointer<RE::Actor>(a_this, REL::Module::get().version() < SKSE::RUNTIME_SSE_1_6_629 ? -0xB8 : -0x7B8);
 		bResult = actor->IsBlocking();
 	}
 
