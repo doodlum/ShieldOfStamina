@@ -87,7 +87,7 @@ bool staminaRegenHook::shouldRegenStamina(RE::ActorState* a_this, uint16_t a_fla
 	bool bResult = _shouldRegenStamina(a_this, a_flags); // is sprinting?
 
 	if (!bResult) {
-		RE::Actor* actor = SKSE::stl::adjust_pointer<RE::Actor>(a_this, REL::Module::get().version() < SKSE::RUNTIME_SSE_1_6_629 ? -0xB8 : -0x7B8);
+		RE::Actor* actor = SKSE::stl::adjust_pointer<RE::Actor>(a_this, REL::Module::get().version() < SKSE::RUNTIME_SSE_1_6_629 ? -0xB8 : -0xC0);
 		bResult = actor->IsBlocking();
 	}
 
