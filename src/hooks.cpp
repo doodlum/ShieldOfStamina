@@ -5,6 +5,13 @@ namespace Utils {
 	{
 		a->AsActorValueOwner()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, av, -val);
 	}
+
+	static inline void TryStagger(RE::Actor* a_target, float a_staggerMult, RE::Actor* a_aggressor)
+	{
+		using func_t = decltype(&TryStagger);
+		REL::Relocation<func_t> func{ REL::RelocationID(36700, 37710) };
+		func(a_target, a_staggerMult, a_aggressor);
+	}
 }
 
 /*stamina blocking*/
@@ -41,7 +48,7 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 			else {
 				staminaDamageMult = bckWpnStaminaMult_NPC_Block_NPC;
 			}
-				
+
 		}
 	}
 	else {
@@ -60,13 +67,15 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 	}
 	float staminaDamage = staminaDamageBase * staminaDamageMult;
 	float targetStamina = target->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina);
-	
+
 	//check whether there's enough stamina to block incoming attack
 	if (targetStamina < staminaDamage) {
 		logger::debug("not enough stamina to block, blocking part of damage!");
 		if (settings::guardBreak) {
 			logger::debug("guard break!");
-			target->NotifyAnimationGraph("staggerStart");
+			if (!target->NotifyAnimationGraph("Maxsu_GuardBreakStart")) {
+				Utils::TryStagger(target, 1.0, aggressor.get());
+			}
 		}
 		hitData.totalDamage = hitData.totalDamage - (targetStamina / staminaDamageMult);
 		Utils::damageav(target, RE::ActorValue::kStamina,
