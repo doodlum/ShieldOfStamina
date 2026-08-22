@@ -3,7 +3,7 @@
 namespace Utils {
 	inline void damageav(RE::Actor* a, RE::ActorValue av, float val)
 	{
-		a->AsActorValueOwner()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, av, -val);
+		a->AsActorValueOwner()->DamageActorValue(av, val);
 	}
 }
 
